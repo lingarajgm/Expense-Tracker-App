@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "1092078604126",
+    "project_id": "fir-60a1c",
+    "storage_bucket": "fir-60a1c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1092078604126:android:185af3bf33205d74ca49cf",
+        "android_client_info": {
+          "package_name": "com.example.expense"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzJOa1RrrQWLfD2VPMiOuTcuwcQmQywcg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1092078604126:android:ba913b35d6d7e91bca49cf",
+        "android_client_info": {
+          "package_name": "com.example.firebase_demo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzJOa1RrrQWLfD2VPMiOuTcuwcQmQywcg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1092078604126:android:508b895ea6a94e78ca49cf",
+        "android_client_info": {
+          "package_name": "com.gsconrad.expense_tracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzJOa1RrrQWLfD2VPMiOuTcuwcQmQywcg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
