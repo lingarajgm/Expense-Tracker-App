@@ -3,6 +3,7 @@ import 'package:expense/core/routes/app_routes.dart';
 import 'package:expense/core/utils/show_snackbar.dart';
 import 'package:expense/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:expense/features/auth/presentation/widgets/auth_field.dart';
+import 'package:expense/features/expense/presentation/pages/privacy_policy_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -156,72 +157,51 @@ class _SignUpPageState extends State<SignUpPage>
                                   shadowColor: Colors.purple.withOpacity(0.3),
                                   elevation: 5,
                                 ),
-                                onPressed: () {
+                                onPressed: () async {
                                   String name = nameController.text.trim();
                                   String email = emailController.text.trim();
                                   String password =
                                       passwordController.text.trim();
 
+                                  // Validate fields first
                                   if (name.length <= 3) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                        content: Text(
-                                          "Name must be at least 4 characters long.",
-                                        ),
-                                        backgroundColor: Color.fromARGB(
-                                          246,
-                                          243,
-                                          93,
-                                          82,
-                                        ),
-                                      ),
+                                          content: Text(
+                                              "Name must be at least 4 characters.")),
                                     );
                                     return;
                                   }
-
                                   if (email.length < 5 ||
                                       !email.contains('@')) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                        content: Text(
-                                          "Enter a valid email with '@' and at least 5 characters.",
-                                        ),
-                                        backgroundColor: Color.fromARGB(
-                                          224,
-                                          245,
-                                          111,
-                                          101,
-                                        ),
-                                      ),
+                                          content:
+                                              Text("Enter a valid email.")),
                                     );
                                     return;
                                   }
-
                                   if (password.length < 6) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                        content: Text(
-                                          "Password must be at least 6 characters long.",
-                                        ),
-                                        backgroundColor: Color.fromARGB(
-                                          230,
-                                          246,
-                                          109,
-                                          99,
-                                        ),
-                                      ),
+                                          content: Text(
+                                              "Password must be at least 6 characters.")),
                                     );
                                     return;
                                   }
 
-                                  // If all validations pass, proceed with sign-up
+                                  // Show friendly privacy dialog
+                                  final agreed =
+                                      await _showPrivacyDialog(context);
+                                  if (agreed != true) return;
+
+                                  // Proceed with signup
                                   context.read<AuthBloc>().add(
-                                    AuthSignUp(
-                                      name: name,
-                                      email: email,
-                                      password: password,
-                                    ),
-                                  );
+                                        AuthSignUp(
+                                            name: name,
+                                            email: email,
+                                            password: password),
+                                      );
                                 },
                                 child: const Text(
                                   'SIGN UP',
@@ -252,7 +232,20 @@ class _SignUpPageState extends State<SignUpPage>
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
+                                  // Add after the "Already have an account?" button
                                 ),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8),
+                              child: Text(
+                                '🔒 Your data is stored securely on Firebase and never shared with third parties. You can delete your account anytime.',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.grey,
+                                ),
+                                textAlign: TextAlign.center,
                               ),
                             ),
                           ],
@@ -265,6 +258,111 @@ class _SignUpPageState extends State<SignUpPage>
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Future<bool?> _showPrivacyDialog(BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+        titlePadding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+        title: const Column(
+          children: [
+            Text('🔒', style: TextStyle(fontSize: 40)),
+            SizedBox(height: 8),
+            Text(
+              'Your Privacy Matters',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 12),
+            const Text(
+              'Before we get started:',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+                color: Colors.grey,
+              ),
+            ),
+            const SizedBox(height: 16),
+            _privacyPoint('✅', 'Your expense data is only yours'),
+            _privacyPoint('✅', 'Never sold or shared with anyone'),
+            _privacyPoint('✅', 'Secured by Google Firebase'),
+            _privacyPoint('✅', 'Delete your account anytime'),
+            const SizedBox(height: 16),
+            // Link to full policy
+            GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const PrivacyPolicyScreen()),
+              ),
+              child: const Text(
+                'Read full Privacy Policy →',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.deepPurple,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+          ],
+        ),
+        actions: [
+          // Cancel button
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: Colors.grey),
+            ),
+          ),
+          // Proceed button
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.deepPurple,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+            ),
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text(
+              "Got it, Let's Go! 🚀",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _privacyPoint(String emoji, String text) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Row(
+        children: [
+          Text(emoji, style: const TextStyle(fontSize: 16)),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(fontSize: 13, height: 1.4),
+            ),
+          ),
+        ],
       ),
     );
   }
