@@ -17,7 +17,6 @@ import 'package:intl/intl.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
 class HomeWidget extends StatelessWidget {
   const HomeWidget({super.key});
 
@@ -30,91 +29,99 @@ class HomeWidget extends StatelessWidget {
 
         return Scaffold(
           appBar: AppBar(
-  title: const Text('Expense Tracker'),
-  actions: [
-    // Theme toggle
-    BlocBuilder<ThemeCubit, ThemeMode>(
-      builder: (context, themeMode) {
-        return IconButton(
-          icon: Icon(
-            themeMode == ThemeMode.dark
-                ? Icons.light_mode
-                : Icons.dark_mode,
-          ),
-          tooltip: 'Toggle Theme',
-          onPressed: () => context.read<ThemeCubit>().toggleTheme(),
-        );
-      },
-    ),
+            title: const Text('Expense Tracker'),
+            actions: [
+              // Theme toggle
+              BlocBuilder<ThemeCubit, ThemeMode>(
+                builder: (context, themeMode) {
+                  return IconButton(
+                    icon: Icon(
+                      themeMode == ThemeMode.dark
+                          ? Icons.light_mode
+                          : Icons.dark_mode,
+                    ),
+                    tooltip: 'Toggle Theme',
+                    onPressed: () => context.read<ThemeCubit>().toggleTheme(),
+                  );
+                },
+              ),
 
-    // Profile
-    IconButton(
-      icon: const Icon(Icons.account_circle),
-      tooltip: 'Profile',
-      onPressed: () => Navigator.push(
-        context,
-        MaterialPageRoute(builder: (_) => const ProfilePage()),
-      ),
-    ),
+              // Profile
+              IconButton(
+                icon: const Icon(Icons.account_circle),
+                tooltip: 'Profile',
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ProfilePage()),
+                ),
+              ),
 
-    // 3-dot menu for everything else
-    PopupMenuButton<String>(
-      onSelected: (value) {
-        switch (value) {
-          case 'charts':
-            Navigator.push(context,
-                MaterialPageRoute(builder: (_) => ChartScreen(expenses: expenses)));
-            break;
-          case 'export':
-            Navigator.push(context,
-                MaterialPageRoute(builder: (_) => ExportScreen(expenses: expenses)));
-            break;
-          case 'budget':
-            Navigator.push(context,
-                MaterialPageRoute(builder: (_) => const BudgetSettingsScreen()));
-            break;
-          case 'delete_all':
-            _showRemoveAllConfirmation(context, expenses);
-            break;
-        }
-      },
-      itemBuilder: (_) => [
-        const PopupMenuItem(
-          value: 'charts',
-          child: ListTile(
-            leading: Icon(Icons.pie_chart_outline),
-            title: Text('Charts'),
-            contentPadding: EdgeInsets.zero,
+              // 3-dot menu for everything else
+              PopupMenuButton<String>(
+                onSelected: (value) {
+                  switch (value) {
+                    case 'charts':
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => ChartScreen(expenses: expenses)));
+                      break;
+                    case 'export':
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) =>
+                                  ExportScreen(expenses: expenses)));
+                      break;
+                    case 'budget':
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const BudgetSettingsScreen()));
+                      break;
+                    case 'delete_all':
+                      _showRemoveAllConfirmation(context, expenses);
+                      break;
+                  }
+                },
+                itemBuilder: (_) => [
+                  const PopupMenuItem(
+                    value: 'charts',
+                    child: ListTile(
+                      leading: Icon(Icons.pie_chart_outline),
+                      title: Text('Charts'),
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                  ),
+                  const PopupMenuItem(
+                    value: 'export',
+                    child: ListTile(
+                      leading: Icon(Icons.picture_as_pdf),
+                      title: Text('Export PDF'),
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                  ),
+                  const PopupMenuItem(
+                    value: 'budget',
+                    child: ListTile(
+                      leading: Icon(Icons.tune),
+                      title: Text('Budget Settings'),
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                  ),
+                  const PopupMenuItem(
+                    value: 'delete_all',
+                    child: ListTile(
+                      leading: Icon(Icons.delete_forever, color: Colors.red),
+                      title: Text('Delete All',
+                          style: TextStyle(color: Colors.red)),
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-        ),
-        const PopupMenuItem(
-          value: 'export',
-          child: ListTile(
-            leading: Icon(Icons.picture_as_pdf),
-            title: Text('Export PDF'),
-            contentPadding: EdgeInsets.zero,
-          ),
-        ),
-        const PopupMenuItem(
-          value: 'budget',
-          child: ListTile(
-            leading: Icon(Icons.tune),
-            title: Text('Budget Settings'),
-            contentPadding: EdgeInsets.zero,
-          ),
-        ),
-        const PopupMenuItem(
-          value: 'delete_all',
-          child: ListTile(
-            leading: Icon(Icons.delete_forever, color: Colors.red),
-            title: Text('Delete All', style: TextStyle(color: Colors.red)),
-            contentPadding: EdgeInsets.zero,
-          ),
-        ),
-      ],
-    ),
-  ],
-),
           floatingActionButton: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -131,7 +138,7 @@ class HomeWidget extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               FloatingActionButton(
-                onPressed: () => _showAddExpenseDialog(context,expenses),
+                onPressed: () => _showAddExpenseDialog(context, expenses),
                 tooltip: 'Add Expense',
                 child: const Icon(Icons.add),
               ),
@@ -158,7 +165,8 @@ class HomeWidget extends StatelessWidget {
   }
 }
 
-Future<bool> _showAddExpenseDialog(BuildContext context, List<Expense> expenses) async  {
+Future<bool> _showAddExpenseDialog(
+    BuildContext context, List<Expense> expenses) async {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
@@ -185,18 +193,19 @@ Future<bool> _showAddExpenseDialog(BuildContext context, List<Expense> expenses)
                 // Title
                 TextFormField(
                   controller: nameController,
-                  decoration: const InputDecoration(labelText: 'Title'),
+                  decoration: const InputDecoration(
+                      labelText: 'Title',
+                      hintText: 'Leave empty to use category name as Title'),
                   onChanged: (s) => name = s,
-                  validator: (value) =>
-                      value == null || value.isEmpty ? 'Title is required' : null,
                 ),
                 // Description
                 TextFormField(
                   controller: descriptionController,
                   decoration: const InputDecoration(labelText: 'Description'),
                   onChanged: (s) => description = s,
-                  validator: (value) =>
-                      value == null || value.isEmpty ? 'Description is required' : null,
+                  validator: (value) => value == null || value.isEmpty
+                      ? 'Description is required'
+                      : null,
                 ),
                 // Amount
                 TextFormField(
@@ -208,8 +217,10 @@ Future<bool> _showAddExpenseDialog(BuildContext context, List<Expense> expenses)
                     FilteringTextInputFormatter.allow(RegExp(r'[\d.]')),
                   ],
                   validator: (value) {
-                    if (value == null || value.isEmpty) return 'Amount is required';
-                    if (double.tryParse(value) == null) return 'Enter a valid number';
+                    if (value == null || value.isEmpty)
+                      return 'Amount is required';
+                    if (double.tryParse(value) == null)
+                      return 'Enter a valid number';
                     return null;
                   },
                 ),
@@ -234,8 +245,9 @@ Future<bool> _showAddExpenseDialog(BuildContext context, List<Expense> expenses)
                           DateFormat('yyyy-MM-dd').format(selectedDate);
                     }
                   },
-                  validator: (value) =>
-                      value == null || value.isEmpty ? 'Date is required' : null,
+                  validator: (value) => value == null || value.isEmpty
+                      ? 'Date is required'
+                      : null,
                 ),
 
                 const SizedBox(height: 16),
@@ -262,7 +274,8 @@ Future<bool> _showAddExpenseDialog(BuildContext context, List<Expense> expenses)
                               ? cat.color.withOpacity(0.2)
                               : Colors.transparent,
                           border: Border.all(
-                            color: isSelected ? cat.color : Colors.grey.shade400,
+                            color:
+                                isSelected ? cat.color : Colors.grey.shade400,
                             width: isSelected ? 1.5 : 1,
                           ),
                           borderRadius: BorderRadius.circular(20),
@@ -300,33 +313,33 @@ Future<bool> _showAddExpenseDialog(BuildContext context, List<Expense> expenses)
             onPressed: () => Navigator.pop(context, false),
           ),
           TextButton(
-  child: const Text('CREATE'),
-  onPressed: () async {
-    if (formKey.currentState!.validate()) {
-      // 1. First create the expense
-      final added = await createExpense(
-        name,
-        description,
-        double.tryParse(amount) ?? 0,
-        selectedDate,
-        selectedCategory,
-      );
+            child: const Text('CREATE'),
+            onPressed: () async {
+              if (formKey.currentState!.validate()) {
+                // 1. First create the expense
+                final added = await createExpense(
+                  name,
+                  description,
+                  double.tryParse(amount) ?? 0,
+                  selectedDate,
+                  selectedCategory,
+                );
 
-      if (added) {
-  if (context.mounted) {
-    await BudgetChecker.check(context); // ← no expenses parameter
-  }
-  if (context.mounted) Navigator.pop(context, true);
-} else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed to create the expense'),
+                if (added) {
+                  if (context.mounted) {
+                    await BudgetChecker.check(context);
+                  }
+                  if (context.mounted) Navigator.pop(context, true);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Failed to create the expense'),
+                    ),
+                  );
+                }
+              }
+            },
           ),
-        );
-      }
-    }
-  },
-),
         ],
       ),
     ),
